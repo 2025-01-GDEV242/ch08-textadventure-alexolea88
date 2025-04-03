@@ -15,7 +15,8 @@ import java.util.List;
  * stores a reference to the neighboring room.
  * 
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author Alejandro Olea
+ * @version 2025.04.02
  */
 
 public class Room 
@@ -70,7 +71,8 @@ public class Room
      * Get a description of all items in the room.
      * @return A string listing all items in the room.
      */
-    public String inspectItems() {
+    public String inspectItems()
+    {
         StringBuilder description = new StringBuilder("Items in this room:\n");
         for (Item item : items.values()) {
             description.append(item.getDescription()).append("\n");
@@ -87,8 +89,6 @@ public class Room
         return description;
     }
     
-    
-
     /**
      * Return a description of the room in the form:
      *     You are in the kitchen.

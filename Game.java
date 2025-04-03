@@ -11,14 +11,16 @@
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author Michael Kölling and David J. Barnes
+ * @author Alejandro Olea
+ * @version 2025.04.02
  */
 
 public class Game 
 {
     private Parser parser;
     private Room currentRoom;
+    private Player player;
         
     /**
      * Create the game and initialise its internal map.
@@ -27,6 +29,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        player = new Player(currentRoom);   // Create a player with the starting room
     }
 
     /**
@@ -77,7 +80,7 @@ public class Game
         outside.addItem(new Item("map", "A detailed map of the university campus", 0.2));
         pub.addItem(new Item("beer", "A cold glass of beer", 1.2));
         lab.addItem(new Item("laptop", "A black touchscreen laptop", 2.5));
-        office.addItem(new Item("key", "A small metal key", 0.3));
+        theater.addItem(new Item("key", "A small metal key", 0.3));
         garage.addItem(new Item("ticket", "A ticket for the university parking", 0.1));
         arcade.addItem(new Item("token", "A golden arcade token used to play games", 0.3));
         overlook.addItem(new Item("binoculars", "A blue pair of binoculars to see into the distance", 1.5));
@@ -141,8 +144,16 @@ public class Game
                 goRoom(command);
                 break;
                 
+            case BACK:
+                goBack();
+                break;
+                
             case TAKE:
                 takeItem(command);
+                break;
+                
+            case DROP:
+                dropItem(command);
                 break;
                 
             case LOOK:
@@ -188,47 +199,86 @@ public class Game
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
      */
-    private void goRoom(Command command) 
+    private void goRoom(Command command)
     {
-        if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
+        if (!command.hasSecondWord()) {
             System.out.println("Go where?");
             return;
         }
-
         String direction = command.getSecondWord();
-
-        // Try to leave current room.
         Room nextRoom = currentRoom.getExit(direction);
-
         if (nextRoom == null) {
             System.out.println("There is no door!");
-        }
-        else {
-            currentRoom = nextRoom;
+        } else {
+            player.moveToRoom(nextRoom);  // Update player's room
+            currentRoom = nextRoom;       // Keep Game's currentRoom in sync
             System.out.println(currentRoom.getLongDescription());
         }
     }
+    
+    private void goBack()
+    {
+        player.goBack();
+        currentRoom = player.getCurrentRoom();  // Sync Game's currentRoom
+        System.out.println("You go back to the " + player.getCurrentRoom().getShortDescription());
+    }
+
     
     /**
      * Allows the player to take an item from the current room.
      * If no item exists or no item name is specified, prints an error message.
      */
-    private void takeItem(Command command) {
+    private void takeItem(Command command)
+    {
         if (!command.hasSecondWord()) {
             System.out.println("Take what?");
             return;
         }
-
+        
         String itemName = command.getSecondWord();
-        Item item = currentRoom.removeItem(itemName);
-
-        if (item == null) {
-            System.out.println("That item is not here!");
+        Item item = player.getCurrentRoom().removeItem(itemName);
+        
+        if (item != null) {
+            player.takeItem(item);
+            System.out.println("You picked up the " + item.getName() + ".");
         } else {
-            System.out.println("You picked up: " + item.getName());
-            // Future: Add inventory system to store taken items.
+            System.out.println("There is no such item here.");
         }
+    }
+    
+    /**
+     * Allows the player to drop an item
+     */
+    private void dropItem(Command command)
+    {
+        if (!command.hasSecondWord()) {
+            System.out.println("Drop what?");
+            return;
+        }
+        
+        String itemName = command.getSecondWord();
+        Item item = findItemInInventory(itemName);
+        
+        if (item != null) {
+            player.dropItem(item);
+            player.getCurrentRoom().addItem(item);
+            System.out.println("You dropped the " + item.getName() + ".");
+        } else {
+            System.out.println("You don't have that item.");
+        }
+    }
+    
+    /**
+     * Find an item in the player's inventory
+     */
+    private Item findItemInInventory(String itemName)
+    {
+        for (Item item : player.getInventory()) {
+            if (item.getName().equals(itemName)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /** 
@@ -241,8 +291,7 @@ public class Game
         if(command.hasSecondWord()) {
             System.out.println("Quit what?");
             return false;
-        }
-        else {
+        } else {
             return true;  // signal that we want to quit
         }
     }
