@@ -22,7 +22,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private List<Item> items;   //stores item(s) in this room
+    private HashMap<String, Item> items;  // Store items by name
 
     /**
      * Create a room described "description". Initially, it has
@@ -34,7 +34,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
-        items = new ArrayList<>(); // Initialize the list of items
+        items = new HashMap<>();
     }
 
     /**
@@ -53,7 +53,17 @@ public class Room
      */
     public void addItem(Item item)
     {
-        items.add(item);
+        items.put(item.getName(), item);  // Store the item by its name
+    }
+    
+    /**
+     * Removes an item from the room by name.
+     * @param itemName The name of the item to remove.
+     * @return The removed item, or null if not found.
+     */
+    public Item removeItem(String itemName)
+    {
+        return items.remove(itemName);
     }
     
     /**
@@ -61,20 +71,11 @@ public class Room
      * @return A string listing all items in the room.
      */
     public String inspectItems() {
-        if (items.isEmpty()) {
-            return "There are no items in this room.";
+        StringBuilder description = new StringBuilder("Items in this room:\n");
+        for (Item item : items.values()) {
+            description.append(item.getDescription()).append("\n");
         }
-
-        StringBuilder itemDetails = new StringBuilder("Items in this room:\n");
-        for (Item item : items) {
-            itemDetails.append(item.getName())
-                       .append(" - ")
-                       .append(item.getDescription())
-                       .append(" (Weight: ")
-                       .append(item.getWeight())
-                       .append(" kg)\n");
-        }
-        return itemDetails.toString();
+        return description.toString();
     }
 
     /**

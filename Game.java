@@ -141,6 +141,10 @@ public class Game
                 goRoom(command);
                 break;
                 
+            case TAKE:
+                takeItem(command);
+                break;
+                
             case LOOK:
                 look();
                 break;
@@ -203,6 +207,27 @@ public class Game
         else {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
+        }
+    }
+    
+    /**
+     * Allows the player to take an item from the current room.
+     * If no item exists or no item name is specified, prints an error message.
+     */
+    private void takeItem(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Take what?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+        Item item = currentRoom.removeItem(itemName);
+
+        if (item == null) {
+            System.out.println("That item is not here!");
+        } else {
+            System.out.println("You picked up: " + item.getName());
+            // Future: Add inventory system to store taken items.
         }
     }
 
