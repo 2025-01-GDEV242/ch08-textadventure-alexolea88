@@ -34,7 +34,7 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room outside, theater, pub, lab, office, overlook, arcade, garage;
       
         // create the rooms
         outside = new Room("outside the main entrance of the university");
@@ -42,20 +42,46 @@ public class Game
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
+        overlook = new Room("in the scenic overlook");
+        arcade = new Room("in the campus arcade");
+        garage = new Room("in the parking garage");
         
         // initialise room exits
         outside.setExit("east", theater);
         outside.setExit("south", lab);
         outside.setExit("west", pub);
+        outside.setExit("north", overlook);
+        
+        overlook.setExit("south", outside);
+        overlook.setExit("east", garage);
+        
+        arcade.setExit("north", pub);
+        arcade.setExit("east", lab);
+        
+        garage.setExit("west", overlook);
+        garage.setExit("south", theater);
 
         theater.setExit("west", outside);
+        theater.setExit("north", garage);
 
         pub.setExit("east", outside);
+        pub.setExit("south", arcade);
 
         lab.setExit("north", outside);
         lab.setExit("east", office);
+        lab.setExit("west", arcade);
 
         office.setExit("west", lab);
+        
+        // Add items to rooms with proper constructor arguments
+        outside.addItem(new Item("map", "A detailed map of the university campus", 0.2));
+        pub.addItem(new Item("beer", "A cold glass of beer", 1.2));
+        lab.addItem(new Item("laptop", "A black touchscreen laptop", 2.5));
+        office.addItem(new Item("key", "A small metal key", 0.3));
+        garage.addItem(new Item("ticket", "A ticket for the university parking", 0.1));
+        arcade.addItem(new Item("token", "A golden arcade token used to play games", 0.3));
+        overlook.addItem(new Item("binoculars", "A blue pair of binoculars to see into the distance", 1.5));
+        office.addItem(new Item("stapler", "A silver handheld stapler", 0.5));
 
         currentRoom = outside;  // start game outside
     }
@@ -117,6 +143,10 @@ public class Game
                 
             case LOOK:
                 look();
+                break;
+                
+            case INSPECT:
+                System.out.println(currentRoom.inspectItems());
                 break;
 
             case QUIT:

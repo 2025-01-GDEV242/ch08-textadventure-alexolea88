@@ -60,17 +60,21 @@ public class Room
      * Get a description of all items in the room.
      * @return A string listing all items in the room.
      */
-    public String getItemDescription() 
-    {
+    public String inspectItems() {
         if (items.isEmpty()) {
-            return "No items here.";
+            return "There are no items in this room.";
         }
 
-        StringBuilder itemDesc = new StringBuilder("Items in the room: ");
+        StringBuilder itemDetails = new StringBuilder("Items in this room:\n");
         for (Item item : items) {
-            itemDesc.append(item.getDescription()).append(" (Weight: ").append(item.getWeight()).append("kg), ");
+            itemDetails.append(item.getName())
+                       .append(" - ")
+                       .append(item.getDescription())
+                       .append(" (Weight: ")
+                       .append(item.getWeight())
+                       .append(" kg)\n");
         }
-        return itemDesc.toString();
+        return itemDetails.toString();
     }
 
     /**
@@ -81,6 +85,8 @@ public class Room
     {
         return description;
     }
+    
+    
 
     /**
      * Return a description of the room in the form:
@@ -91,7 +97,7 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString() + "\n" + getItemDescription();
+        return "You are " + description + ".\n" + getExitString() + "\n" + inspectItems();
     }
 
     /**
