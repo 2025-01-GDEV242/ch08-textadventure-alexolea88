@@ -114,6 +114,10 @@ public class Game
             case GO:
                 goRoom(command);
                 break;
+                
+            case LOOK:
+                look();
+                break;
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -136,6 +140,14 @@ public class Game
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
+    }
+    
+    /**
+     * Print the description of the current room.
+     */
+    private void look()
+    {
+        System.out.println(currentRoom.getLongDescription());
     }
 
     /** 
