@@ -1,0 +1,9 @@
+Elements implemented for A level:
+
+	A player can pick up any number of items
+
+	Rooms can hold multiple items
+
+	Go back many rooms (retraces steps)
+	
+	look command
