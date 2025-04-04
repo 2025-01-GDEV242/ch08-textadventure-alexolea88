@@ -23,7 +23,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private HashMap<String, Item> items;  // Store items by name
+    private List<Item> items;  // List of items to store multiple in one room
 
     /**
      * Create a room described "description". Initially, it has
@@ -35,7 +35,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
-        items = new HashMap<>();
+        items = new ArrayList<>(); // initialize as ArrayList
     }
 
     /**
@@ -54,7 +54,7 @@ public class Room
      */
     public void addItem(Item item)
     {
-        items.put(item.getName(), item);  // Store the item by its name
+        items.add(item);  // Add item to list
     }
     
     /**
@@ -64,7 +64,13 @@ public class Room
      */
     public Item removeItem(String itemName)
     {
-        return items.remove(itemName);
+        for (Item item : items) {
+            if (item.getName().equals(itemName)) {
+                items.remove(item);  // Remove the first matching item
+                return item;
+            }
+        }
+        return null;  // Not found
     }
     
     /**
@@ -73,8 +79,11 @@ public class Room
      */
     public String inspectItems()
     {
+        if (items.isEmpty()) {
+            return "No items in this room.";
+        }
         StringBuilder description = new StringBuilder("Items in this room:\n");
-        for (Item item : items.values()) {
+        for (Item item : items) {
             description.append(item.getDescription()).append("\n");
         }
         return description.toString();

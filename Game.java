@@ -78,13 +78,23 @@ public class Game
         
         // Add items to rooms with proper constructor arguments
         outside.addItem(new Item("map", "A detailed map of the university campus", 0.2));
+        
         pub.addItem(new Item("beer", "A cold glass of beer", 1.2));
+        pub.addItem(new Item("water", "A room temperature water", 1));
+        
         lab.addItem(new Item("laptop", "A black touchscreen laptop", 2.5));
+        
         theater.addItem(new Item("key", "A small metal key", 0.3));
+        
         garage.addItem(new Item("ticket", "A ticket for the university parking", 0.1));
+        garage.addItem(new Item("wallet", "A stranger's missing wallet", 0.4));
+        
         arcade.addItem(new Item("token", "A golden arcade token used to play games", 0.3));
+        
         overlook.addItem(new Item("binoculars", "A blue pair of binoculars to see into the distance", 1.5));
+        
         office.addItem(new Item("stapler", "A silver handheld stapler", 0.5));
+        office.addItem(new Item("keyboard", "An ergonomic keyboard", 1.8));
 
         currentRoom = outside;  // start game outside
     }
@@ -220,7 +230,7 @@ public class Game
     {
         player.goBack();
         currentRoom = player.getCurrentRoom();  // Sync Game's currentRoom
-        System.out.println("You go back to the " + player.getCurrentRoom().getShortDescription());
+        System.out.println("You go back and are now " + player.getCurrentRoom().getShortDescription());
     }
 
     

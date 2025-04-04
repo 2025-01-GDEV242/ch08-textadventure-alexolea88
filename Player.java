@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Write a description of class Player here.
+ * Class Player - A player object that stores the current and previous room of the player along with their inventory of items.
  *
  * @author Alejandro Olea
  * @version 2025.04.02
@@ -73,7 +73,6 @@ public class Player
         Room temp = currentRoom;
         currentRoom = previousRoom;
         previousRoom = temp;  // Swap the rooms so "back" can be used again
-        System.out.println("You moved back to: " + currentRoom.getLongDescription());
     }
 
     /**
