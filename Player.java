@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Class Player - A player object that stores the current and previous room of the player along with their inventory of items.
@@ -11,7 +12,7 @@ import java.util.List;
 public class Player
 {
     private Room currentRoom;  // The room the player is currently in
-    private Room previousRoom;  // The room the player was previously in
+    private Stack<Room> roomHistory;  // Stack storing room history
     private List<Item> inventory;  // List of items the player is carrying
 
     /**
@@ -21,7 +22,7 @@ public class Player
     public Player(Room startingRoom)
     {
         this.currentRoom = startingRoom;
-        this.previousRoom = null;  // No previous room at the start
+        this.roomHistory = new Stack<>();  // No previous room at the start
         this.inventory = new ArrayList<>();
     }
 
@@ -32,14 +33,6 @@ public class Player
     public Room getCurrentRoom()
     {
         return currentRoom;
-    }
-    
-    /**
-     * Get the previous room of the player.
-     * @return The previous room.
-     */
-    public Room getPreviousRoom() {
-        return previousRoom;
     }
 
     /**
@@ -57,22 +50,23 @@ public class Player
     public void moveToRoom(Room newRoom)
     {
         if (this.currentRoom != null) {
-            this.previousRoom = this.currentRoom;  // Save current room as previous room before moving
+            this.roomHistory.push(this.currentRoom);  // Push current room to history
         }
-        this.currentRoom = newRoom;  // Update the current room
+        this.currentRoom = newRoom;
     }
 
     /**
      * Allow player to go back to the previous room
      */
-    public void goBack() {
-        if (previousRoom == null) {
-            System.out.println("No previous room to go back to.");
+    public void goBack()
+    {
+        if (roomHistory.isEmpty()) {
+            System.out.println("There is no room to go back to\n");
+            System.out.println(currentRoom.getLongDescription());
             return;
         }
-        Room temp = currentRoom;
-        currentRoom = previousRoom;
-        previousRoom = temp;  // Swap the rooms so "back" can be used again
+        this.currentRoom = roomHistory.pop();
+        System.out.println("You go back" + currentRoom.getLongDescription().substring(7));  // Skip "You are "
     }
 
     /**

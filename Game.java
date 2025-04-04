@@ -226,16 +226,17 @@ public class Game
         }
     }
     
+    /**
+     * Allow player to backtrack to previous room
+     */
     private void goBack()
     {
         player.goBack();
-        currentRoom = player.getCurrentRoom();  // Sync Game's currentRoom
-        System.out.println("You go back and are now " + player.getCurrentRoom().getShortDescription());
+        currentRoom = player.getCurrentRoom();  // Sync room
     }
 
-    
     /**
-     * Allows the player to take an item from the current room.
+     * Allow the player to take an item from the current room.
      * If no item exists or no item name is specified, prints an error message.
      */
     private void takeItem(Command command)
@@ -304,5 +305,15 @@ public class Game
         } else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    /**
+     * Main method to run the game standalone.
+     * @param args Command-line arguments (not used).
+     */
+    public static void main(String[] args) 
+    {
+        Game game = new Game();  // Create a new game instance
+        game.play();             // Start the game
     }
 }
