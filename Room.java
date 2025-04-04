@@ -1,6 +1,8 @@
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class Room - a room in an adventure game.
@@ -13,13 +15,15 @@ import java.util.Iterator;
  * stores a reference to the neighboring room.
  * 
  * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author Alejandro Olea
+ * @version 2025.04.02
  */
 
 public class Room 
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
+    private List<Item> items;  // List of items to store multiple in one room
 
     /**
      * Create a room described "description". Initially, it has
@@ -31,6 +35,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
+        items = new ArrayList<>(); // initialize as ArrayList
     }
 
     /**
@@ -42,6 +47,47 @@ public class Room
     {
         exits.put(direction, neighbor);
     }
+    
+    /**
+     * Add an item to the room.
+     * @param item The item object.
+     */
+    public void addItem(Item item)
+    {
+        items.add(item);  // Add item to list
+    }
+    
+    /**
+     * Removes an item from the room by name.
+     * @param itemName The name of the item to remove.
+     * @return The removed item, or null if not found.
+     */
+    public Item removeItem(String itemName)
+    {
+        for (Item item : items) {
+            if (item.getName().equals(itemName)) {
+                items.remove(item);  // Remove the first matching item
+                return item;
+            }
+        }
+        return null;  // Not found
+    }
+    
+    /**
+     * Get a description of all items in the room.
+     * @return A string listing all items in the room.
+     */
+    public String inspectItems()
+    {
+        if (items.isEmpty()) {
+            return "No items in this room.";
+        }
+        StringBuilder description = new StringBuilder("Items in this room:\n");
+        for (Item item : items) {
+            description.append(item.getDescription()).append("\n");
+        }
+        return description.toString();
+    }
 
     /**
      * @return The short description of the room
@@ -51,16 +97,17 @@ public class Room
     {
         return description;
     }
-
+    
     /**
      * Return a description of the room in the form:
      *     You are in the kitchen.
      *     Exits: north west
+     *     Item: key (5kg)
      * @return A long description of this room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + description + ".\n" + getExitString() + "\n" + "\n" + inspectItems();
     }
 
     /**
